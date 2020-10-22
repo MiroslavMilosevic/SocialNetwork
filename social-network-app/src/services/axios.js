@@ -1,7 +1,7 @@
 import axios from 'axios'
-export const getUsersArray=()=>{
+export const getUserMessages=(id)=>{
 
-   return axios.get('https://script.google.com/macros/s/AKfycbyaPSgO1KOnrE1vPswfyrByQwhcMtJH5t8VfErd_pc3viSAkU4/exec?id=2')
+   return axios.get(`https://script.google.com/macros/s/AKfycbyaPSgO1KOnrE1vPswfyrByQwhcMtJH5t8VfErd_pc3viSAkU4/exec?id=${id+1}`)
 }
 
 export const postMessage=(inputPoruka)=>{

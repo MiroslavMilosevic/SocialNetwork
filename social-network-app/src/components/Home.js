@@ -1,8 +1,16 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import {v1 as uuid } from 'uuid'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Link } from 'react-router-dom'
 
 export default function Home({usersArray}) {
+    const [user, setUser] = useState({});
+    useEffect(() => {
+        setUser(
+            {id:localStorage.getItem('id'), username:localStorage.getItem('username'), password:localStorage.getItem('password')}
+            ) 
+    }, [])
+
+
     return (
         <div>
             
