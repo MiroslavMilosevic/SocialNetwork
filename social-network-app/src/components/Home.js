@@ -13,8 +13,8 @@ export default function Home({usersArray}) {
 
     return (
         <div>
-            
-    {usersArray.map(el=> <p key={uuid()}>Idi na Chat sa<Link key={uuid()} to={`chat/${el.id}`}  >{el.username}</Link> </p>)}
+                         <button onClick={()=>console.log(localStorage.getItem('username'))}>DUGME</button> 
+    {usersArray.map(el=> <p key={uuid()}>Idi na Chat sa: <Link key={uuid()} to={`chat/${el.id}`}  >{el.username}</Link> </p>)}
           
         </div>
     )

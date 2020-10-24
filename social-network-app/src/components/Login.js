@@ -15,6 +15,12 @@ export default function Login({usersArray}) {
                        if(element.username===username && element.password===password){
                            console.log('uspesno');
                            isSuccessful=true;
+                           localStorage.setItem('id', element.id.toString())
+                           localStorage.setItem('username', element.username)
+                           localStorage.setItem('password', element.password)
+                         console.log(localStorage.getItem('username'))
+                         console.log(   localStorage.getItem('password'))
+                         console.log(   localStorage.getItem('id'))
                       
                        }
                    });

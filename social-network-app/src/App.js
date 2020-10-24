@@ -10,9 +10,9 @@ function App() {
   const [usersArray, setUsersArray] = useState([]);
   const [user, setUser] = useState({});
  // const [inputPoruka, setInputPoruka] = useState('')
- localStorage.setItem('id','1');
- localStorage.setItem('username','milancemkc');
- localStorage.setItem('password','mkc');
+//  localStorage.setItem('id','1');
+//  localStorage.setItem('username','milancemkc');
+//  localStorage.setItem('password','mkc');
   useEffect(() => {
     setUser(
       {id:localStorage.getItem('id'), username:localStorage.getItem('username'), password:localStorage.getItem('password')}

@@ -10,42 +10,55 @@ export default function Chat() {
     const [porukePrijatelja, setPorukePrijatelja] = useState([]);
     const [zajednickePoruke, setZajednickePoruke] = useState([]);
     const [inputPoruka, setInputPoruka] = useState('');
-    const intervalRef = useRef();
+    const [pomocniState, setPomocniState] = useState(0);
+  //  const intervalRef = useRef();
 
     useEffect(() => {
 
         getUserMessages(Number(id)).then(res => {
-            let tmp = res.data.map(el => { return { id: el.split(';')[0], poruka: el.split(';')[1], date:  Date.parse(el.split(';')[2]) } })
+            let tmp = res.data.map(el => { return { id: el.split(';')[0], idPoslao:el.split(';')[1] ,
+             poruka: el.split(';')[2], date:  Date.parse(el.split(';')[3]), stringDate:el.split(';')[3] } })
             setPorukePrijatelja(tmp);
         })
         getUserMessages(Number(user.id)).then(res => {
-            let tmp = res.data.map(el => { return { id: el.split('')[0], poruka: el.split(';')[1], date: Date.parse(el.split(';')[2]) } })
+            let tmp = res.data.map(el => { return { id: el.split(';')[0], idPoslao:el.split(';')[1] ,
+            poruka: el.split(';')[2], date:  Date.parse(el.split(';')[3]), stringDate:el.split(';')[3] } })
             console.log(tmp);
             setNizPoruka(tmp);
         })
-        setInterval(() => {
+      let interval1 =  setInterval(() => {
             getUserMessages(Number(id)).then(res => {
-                let tmp = res.data.map(el => { return { id: el.split(';')[0], poruka: el.split(';')[1], date: Date.parse(el.split(';')[2]) } })
+                let tmp = res.data.map(el => { return { id: el.split(';')[0], idPoslao:el.split(';')[1] ,
+                poruka: el.split(';')[2], date:  Date.parse(el.split(';')[3]), stringDate:el.split(';')[3] } })
                 setPorukePrijatelja(tmp);
-                console.log('setInterval u useEffect-u');   
+      //          console.log('setInterval u useEffect-u');   
             })
         }, 1200);
-        setInterval(() => {
-            getUserMessages(Number(user.id)).then(res => {
-            let tmp = res.data.map(el => { return { id: el.split(';')[0], poruka: el.split(';')[1], date: Date.parse(el.split(';')[2]) } })
-            setNizPoruka(tmp);
-        })
-        console.log('updateeeeeeeeeeeeee');
-        }, 3200);
+    //    let interval2 = setInterval(() => {
+    //         getUserMessages(Number(user.id)).then(res => {
+    //             let tmp = res.data.map(el => { return { id: el.split(';')[0], idPoslao:el.split(';')[1] ,
+    //             poruka: el.split(';')[2], date:  Date.parse(el.split(';')[3]), stringDate:el.split(';')[3] } })
+    //             if(tmp.length===nizPoruka.length||pomocniState===0){
+    //                 console.log(nizPoruka.length, tmp.length,'qqqqqqqqqqqqqqqqqqqqqqqqq');
+    //         setNizPoruka(tmp);
+    //             }
+    //             console.log(nizPoruka.length, tmp.length,'qqqqqqqqqqqqqqqqqqqqqqqqq');
+    //     })
+    //     console.log('updateeeeeeeeeeeeee');
+    //     }, 3000);
+        return function(){
+            clearInterval(interval1);
+          //  clearInterval(interval2);
+        }
     }, [])
 
     useEffect(() => {
      //   if (porukePrijatelja !== []) {       
-            let tmp = [...porukePrijatelja, ...nizPoruka];
-            console.log(zajednickePoruke.sort((a,b)=> a.date-b.date));
+            let tmp = [...porukePrijatelja.filter(el => el.idPoslao===user.id) , ...nizPoruka.filter(el => el.idPoslao===id)];
+         //   console.log(zajednickePoruke.sort((a,b)=> a.date-b.date));
             setZajednickePoruke(tmp);
       //  }
- console.log('useefecttttttttttt');
+ console.log(zajednickePoruke);
     }, [porukePrijatelja, nizPoruka])
 
 
@@ -58,17 +71,16 @@ export default function Chat() {
              {/* <button onClick={()=>{ setNizPoruka([])}}>DUGME</button> */}
             <h1>{'chat sa korisnikom sa id-om: ' + id}</h1>
             <input type='text' value={inputPoruka} placeholder='poruka...' onChange={(e)=>{setInputPoruka(e.target.value)} } onKeyPress={(event)=>{
-                    if (event.key == 'Enter') {
-                       postMessage(inputPoruka, user.id)
+                    if (event.key === 'Enter') {
+                       postMessage(inputPoruka, user.id,id)
                        let tmp=[...nizPoruka];
-                       tmp.push( { id: user.id, poruka:inputPoruka,   date:new Date().toString() } );
-                     //  let objekat={ id: user.id, poruka:inputPoruka,   date:new Date().toString() }
+                       tmp.push( { id: user.id,idPoslao:id, poruka:inputPoruka,   date:Date.parse(new Date().toString()), stringDate:(new Date).toString() } );
                        setNizPoruka(tmp);
                      }
                   
             }}/>
             {zajednickePoruke.sort((a,b)=>a.date-b.date)
-            .map(el => <p key={uuid()}>{el.poruka + ' | ' + el.id+ '   |  datum: '+el.date}</p>)
+            .map(el => { return (<div key={uuid()}><p key={uuid()}>{el.poruka + ' | ' + el.id+ '   | '}</p></div>)})
             }
         </div>
     )
