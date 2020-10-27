@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
-
+import React, { useState, } from 'react'
+import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useHistory } from 'react-router-dom'
 export default function Login({usersArray}) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
+    const myHistory= useHistory();
     return (
         <div>
                      
@@ -12,7 +13,7 @@ export default function Login({usersArray}) {
                 ()=>{console.log(username, password)
                     let isSuccessful=false;
                    usersArray.forEach(element => {
-                       if(element.username===username && element.password===password){
+                       if(element.username===username.trim() && element.password===password.trim()){
                            console.log('uspesno');
                            isSuccessful=true;
                            localStorage.setItem('id', element.id.toString())
@@ -21,6 +22,9 @@ export default function Login({usersArray}) {
                          console.log(localStorage.getItem('username'))
                          console.log(   localStorage.getItem('password'))
                          console.log(   localStorage.getItem('id'))
+                         setTimeout(() => {
+                             myHistory.push('home')
+                         }, 500);
                       
                        }
                    });

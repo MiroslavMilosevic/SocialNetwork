@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { BrowserRouter as Redirect, useParams } from 'react-router-dom'
-import { getUserMessages, postMessage, } from '../services/axios'
+import { getUserMessages, postMessage,postRedZaUpis, getRedZaUpis } from '../services/axios'
 import { v1 as uuid } from 'uuid'
+import { isMessageCorrect } from '../functions/textValidation'
 
 export default function Chat() {
     const [id] = useState(useParams().id);
@@ -10,11 +11,17 @@ export default function Chat() {
     const [porukePrijatelja, setPorukePrijatelja] = useState([]);
     const [zajednickePoruke, setZajednickePoruke] = useState([]);
     const [inputPoruka, setInputPoruka] = useState('');
-    const [pomocniState, setPomocniState] = useState(0);
-  //  const intervalRef = useRef();
+  //  const [redZaUpis, setRedZaUpis] = useState(0);
+      window.onbeforeunload = () =>{
+          postRedZaUpis(user.id, Number(localStorage.getItem('redZaUpis')));
+      }
+
 
     useEffect(() => {
-
+        getRedZaUpis(user.id).then(res =>{
+            console.log(res.data);
+            localStorage.setItem('redZaUpis' , res.data);
+        })
         getUserMessages(Number(id)).then(res => {
             let tmp = res.data.map(el => { return { id: el.split(';')[0], idPoslao:el.split(';')[1] ,
              poruka: el.split(';')[2], date:  Date.parse(el.split(';')[3]), stringDate:el.split(';')[3] } })
@@ -33,7 +40,7 @@ export default function Chat() {
                 setPorukePrijatelja(tmp);
       //          console.log('setInterval u useEffect-u');   
             })
-        }, 1200);
+        }, 2000);
     //    let interval2 = setInterval(() => {
     //         getUserMessages(Number(user.id)).then(res => {
     //             let tmp = res.data.map(el => { return { id: el.split(';')[0], idPoslao:el.split(';')[1] ,
@@ -48,7 +55,8 @@ export default function Chat() {
     //     }, 3000);
         return function(){
             clearInterval(interval1);
-          //  clearInterval(interval2);
+            console.log('odjavaaaaaaaaaa'+localStorage.getItem('redZaUpis'));
+            postRedZaUpis(user.id, Number(localStorage.getItem('redZaUpis')))
         }
     }, [])
 
@@ -68,14 +76,23 @@ export default function Chat() {
 
     return (
         <div>
-             {/* <button onClick={()=>{ setNizPoruka([])}}>DUGME</button> */}
+             <button onClick={()=>{ 
+
+               console.log(localStorage.getItem('redZaUpis'));
+             }}>DUGME</button>
             <h1>{'chat sa korisnikom sa id-om: ' + id}</h1>
             <input type='text' value={inputPoruka} placeholder='poruka...' onChange={(e)=>{setInputPoruka(e.target.value)} } onKeyPress={(event)=>{
                     if (event.key === 'Enter') {
-                       postMessage(inputPoruka, user.id,id)
+                        if(isMessageCorrect(inputPoruka)[0]){
+                     //  localStorage.setItem('redZaUpis' , Number(localStorage.getItem('redZaUpis'))+1)
+                       postMessage(inputPoruka, user.id, id, localStorage.getItem('redZaUpis'));
+                       localStorage.setItem('redZaUpis' , Number(localStorage.getItem('redZaUpis'))+1)
                        let tmp=[...nizPoruka];
                        tmp.push( { id: user.id,idPoslao:id, poruka:inputPoruka,   date:Date.parse(new Date().toString()), stringDate:(new Date).toString() } );
                        setNizPoruka(tmp);
+                        }else{
+                            console.log(isMessageCorrect(inputPoruka));
+                        }
                      }
                   
             }}/>
