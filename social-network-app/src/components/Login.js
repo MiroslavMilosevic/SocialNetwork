@@ -1,9 +1,15 @@
-import React, { useState, } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link, Redirect, useParams, useHistory } from 'react-router-dom'
-export default function Login({usersArray}) {
+import React, { useState, useEffect} from 'react'
+import { BrowserRouter as Router, Link, Redirect,  useHistory } from 'react-router-dom'
+
+export default function Login({usersArray,setUser}) {
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const myHistory= useHistory();
+    useEffect(() => {
+
+    }, [])
+
     return (
         <div>
                      
@@ -19,12 +25,18 @@ export default function Login({usersArray}) {
                            localStorage.setItem('id', element.id.toString())
                            localStorage.setItem('username', element.username)
                            localStorage.setItem('password', element.password)
-                         console.log(localStorage.getItem('username'))
-                         console.log(   localStorage.getItem('password'))
-                         console.log(   localStorage.getItem('id'))
+                           localStorage.setItem('isLoged', 'true')
+                           setUser(
+                            {id:localStorage.getItem('id'), username:localStorage.getItem('username'),
+                             password:localStorage.getItem('password'), isLoged:true}
+                            )
+                    
+                        //  console.log(localStorage.getItem('username'))
+                        //  console.log(   localStorage.getItem('password'))
+                        //  console.log(   localStorage.getItem('id'))
                          setTimeout(() => {
                              myHistory.push('home')
-                         }, 500);
+                         }, 150);
                       
                        }
                    });
@@ -34,6 +46,17 @@ export default function Login({usersArray}) {
                       
             }
             }>Uloguj se</button>
+            <button onClick={()=>{
+                localStorage.setItem('username', null)
+                localStorage.setItem('password', null)
+                localStorage.setItem('id', null)
+                localStorage.setItem('isLoged', null)
+                setUser(
+                    { id:localStorage.getItem('id'), username:localStorage.getItem('username'),
+                     password:localStorage.getItem('password'), isLoged:false }
+                    )
+        
+            }}>Set to null</button>
 
         </div>
     )

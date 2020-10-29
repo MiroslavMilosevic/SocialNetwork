@@ -6,11 +6,12 @@ import { isMessageCorrect } from '../functions/textValidation'
 
 export default function Chat() {
     const [id] = useState(useParams().id);
-    const [user] = useState({ id: localStorage.getItem('id'), username: localStorage.getItem('username'), password: localStorage.getItem('password') });
+    const [user] = useState({ id: localStorage.getItem('id'), username: localStorage.getItem('username'), password: localStorage.getItem('password'), isLoged:localStorage.getItem('isLoged') });
     const [nizPoruka, setNizPoruka] = useState([]);
     const [porukePrijatelja, setPorukePrijatelja] = useState([]);
     const [zajednickePoruke, setZajednickePoruke] = useState([]);
     const [inputPoruka, setInputPoruka] = useState('');
+  
   //  const [redZaUpis, setRedZaUpis] = useState(0);
       window.onbeforeunload = () =>{
           postRedZaUpis(user.id, Number(localStorage.getItem('redZaUpis')));
@@ -41,18 +42,7 @@ export default function Chat() {
       //          console.log('setInterval u useEffect-u');   
             })
         }, 2000);
-    //    let interval2 = setInterval(() => {
-    //         getUserMessages(Number(user.id)).then(res => {
-    //             let tmp = res.data.map(el => { return { id: el.split(';')[0], idPoslao:el.split(';')[1] ,
-    //             poruka: el.split(';')[2], date:  Date.parse(el.split(';')[3]), stringDate:el.split(';')[3] } })
-    //             if(tmp.length===nizPoruka.length||pomocniState===0){
-    //                 console.log(nizPoruka.length, tmp.length,'qqqqqqqqqqqqqqqqqqqqqqqqq');
-    //         setNizPoruka(tmp);
-    //             }
-    //             console.log(nizPoruka.length, tmp.length,'qqqqqqqqqqqqqqqqqqqqqqqqq');
-    //     })
-    //     console.log('updateeeeeeeeeeeeee');
-    //     }, 3000);
+ 
         return function(){
             clearInterval(interval1);
             console.log('odjavaaaaaaaaaa'+localStorage.getItem('redZaUpis'));
@@ -61,9 +51,13 @@ export default function Chat() {
     }, [])
 
     useEffect(() => {
-     //   if (porukePrijatelja !== []) {       
-            let tmp = [...porukePrijatelja.filter(el => el.idPoslao===user.id) , ...nizPoruka.filter(el => el.idPoslao===id)];
-         //   console.log(zajednickePoruke.sort((a,b)=> a.date-b.date));
+     //   if (porukePrijatelja !== []) { 
+         let tmp=[];
+         if(user.id!==id){      
+             tmp = [...porukePrijatelja.filter(el => el.idPoslao===user.id) , ...nizPoruka.filter(el => el.idPoslao===id)];
+         }else{
+             tmp = [...nizPoruka.filter(el => el.idPoslao===user.id)];
+         }
             setZajednickePoruke(tmp);
       //  }
  console.log(zajednickePoruke);
@@ -76,8 +70,9 @@ export default function Chat() {
 
     return (
         <div>
-             <button onClick={()=>{ 
 
+             <button onClick={()=>{ 
+     
                console.log(localStorage.getItem('redZaUpis'));
              }}>DUGME</button>
             <h1>{'chat sa korisnikom sa id-om: ' + id}</h1>
@@ -90,8 +85,12 @@ export default function Chat() {
                        let tmp=[...nizPoruka];
                        tmp.push( { id: user.id,idPoslao:id, poruka:inputPoruka,   date:Date.parse(new Date().toString()), stringDate:(new Date).toString() } );
                        setNizPoruka(tmp);
+       
+                        setInputPoruka('');
+             
+                    
                         }else{
-                            console.log(isMessageCorrect(inputPoruka));
+                           alert(isMessageCorrect(inputPoruka)[1])
                         }
                      }
                   
@@ -99,6 +98,7 @@ export default function Chat() {
             {zajednickePoruke.sort((a,b)=>a.date-b.date)
             .map(el => { return (<div key={uuid()}><p key={uuid()}>{el.poruka + ' | ' + el.id+ '   | '}</p></div>)})
             }
+     
         </div>
     )
 }

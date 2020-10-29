@@ -8,16 +8,20 @@ import Chat from './components/Chat'
 function App() {
  // const [nizPoruka, setNizPoruka] = useState([]);
   const [usersArray, setUsersArray] = useState([]);
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState(  {id:localStorage.getItem('id'), username:localStorage.getItem('username'), password:localStorage.getItem('password'), isLoged:localStorage.getItem('isLoged')});
+
+  
  // const [inputPoruka, setInputPoruka] = useState('')
 //  localStorage.setItem('id','1');
 //  localStorage.setItem('username','milancemkc');
 //  localStorage.setItem('password','mkc');
+
   useEffect(() => {
     setUser(
-      {id:localStorage.getItem('id'), username:localStorage.getItem('username'), password:localStorage.getItem('password')}
+      {id:localStorage.getItem('id'), username:localStorage.getItem('username'), password:localStorage.getItem('password'), isLoged:localStorage.getItem('isLoged')}
       )
     setUsersArray(usersArrayImported)
+    
     // getUserMessages(1).then(res => {
     //   let tmp = res.data.map(el => { return { id: el.split(';')[0], poruka: el.split(';')[1], date: el.split(';')[2] } })
     //   console.log(tmp);
@@ -49,18 +53,18 @@ function App() {
 
         <Switch>
           <Route exact path="/home">
-            <Home usersArray={usersArray} />
+       { user.isLoged!=='null'&&user.isLoged!==null ?  <Home usersArray={usersArray}  /> : <p>nisi ulogovan</p> } 
 
           </Route>
           <Route exact path="/">
+
             <button onClick={() => {
               console.log(usersArray)
-             // console.log(nizPoruka);
-
             }}>abcdefg</button>
+
           </Route>
           <Route exact path="/login">
-            <Login usersArray={usersArray} />
+          {  <Login usersArray={usersArray}  setUser={setUser}/> }
 
 
           </Route>
@@ -68,7 +72,8 @@ function App() {
 
           </Route>
           <Route exact path="/chat/:id">
-               <Chat/>
+         
+          { user.isLoged!=='null'&&user.isLoged!==null ?  <Chat  />: <p>nisi ulogovan</p> } 
             {/* {localStorage.getItem('user')=== ''? <ParagrafS2>Niste Ulogovani</ParagrafS2> : <Club niz={niz} setNiz={setNiz}></Club>} */}
           </Route>
         </Switch>
