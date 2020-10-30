@@ -5,16 +5,12 @@ import { usersArrayImported, } from './u&p/users'
 import Login from './components/Login'
 import Home from './components/Home'
 import Chat from './components/Chat'
+
 function App() {
  // const [nizPoruka, setNizPoruka] = useState([]);
   const [usersArray, setUsersArray] = useState([]);
-  const [user, setUser] = useState(  {id:localStorage.getItem('id'), username:localStorage.getItem('username'), password:localStorage.getItem('password'), isLoged:localStorage.getItem('isLoged')});
-
-  
- // const [inputPoruka, setInputPoruka] = useState('')
-//  localStorage.setItem('id','1');
-//  localStorage.setItem('username','milancemkc');
-//  localStorage.setItem('password','mkc');
+  const [user, setUser] = useState(  {id:localStorage.getItem('id'), username:localStorage.getItem('username'),
+   password:localStorage.getItem('password'), isLoged:localStorage.getItem('isLoged')});
 
   useEffect(() => {
     setUser(
@@ -53,7 +49,7 @@ function App() {
 
         <Switch>
           <Route exact path="/home">
-       { user.isLoged!=='null'&&user.isLoged!==null ?  <Home usersArray={usersArray}  /> : <p>nisi ulogovan</p> } 
+       { user.isLoged!=='null'&&user.isLoged!==null ?  <Home usersArray={usersArray} setUser={setUser} /> : <p>nisi ulogovan</p> } 
 
           </Route>
           <Route exact path="/">
@@ -73,7 +69,7 @@ function App() {
           </Route>
           <Route exact path="/chat/:id">
          
-          { user.isLoged!=='null'&&user.isLoged!==null ?  <Chat  />: <p>nisi ulogovan</p> } 
+          { user.isLoged!=='null'&&user.isLoged!==null ?  <Chat setUserApp={setUser} />: <p>nisi ulogovan</p> } 
             {/* {localStorage.getItem('user')=== ''? <ParagrafS2>Niste Ulogovani</ParagrafS2> : <Club niz={niz} setNiz={setNiz}></Club>} */}
           </Route>
         </Switch>

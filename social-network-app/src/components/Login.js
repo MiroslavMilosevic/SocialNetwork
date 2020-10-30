@@ -53,7 +53,7 @@ export default function Login({usersArray,setUser}) {
                 localStorage.setItem('isLoged', null)
                 setUser(
                     { id:localStorage.getItem('id'), username:localStorage.getItem('username'),
-                     password:localStorage.getItem('password'), isLoged:false }
+                     password:localStorage.getItem('password'), isLoged:null }
                     )
         
             }}>Set to null</button>
